@@ -8,16 +8,16 @@ function App() {
     const [movies, setMovies] = useState([]);
     const [addingMovie, setAddingMovie] = useState(false);
 
-    useEffect(() => {
-         const fetchMovies = async () => {
+    const fetchMovies = async () => {
             const response = await fetch(`/movies`);
             if (response.ok) {
                 const movies = await response.json();
                 setMovies(movies);
             }
          };
+    useEffect(() => {
         fetchMovies();
-    }, [movies]);
+    }, []);
 
     async function handleAddMovie(movie) {
         movie.actors = '';
@@ -29,6 +29,7 @@ function App() {
           if (response.ok) {
               setMovies([...movies, movie]);
               setAddingMovie(false);
+              fetchMovies()
           }
     }
 
@@ -40,6 +41,7 @@ function App() {
             });
             if (response.ok) {
                 setMovies(movies.filter(m => m.id !== movie.id))
+                fetchMovies()
             }
     }
 
