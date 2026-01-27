@@ -9,7 +9,7 @@ import sqlite3
 class Movie(BaseModel):
     title: str
     year: str
-    actors: str
+    actors: list[str]
 
 app = FastAPI()
 
@@ -42,9 +42,10 @@ def get_single_movie(movie_id:int):  # put application's code here
 
 @app.post("/movies")
 def add_movie(movie: Movie):
+    flat_actors = ", ".join(movie.actors)
     db = sqlite3.connect('movies.db')
     cursor = db.cursor()
-    cursor.execute(f"INSERT INTO movies (title, year, actors) VALUES ('{movie.title}', '{movie.year}', '{movie.actors}')")
+    cursor.execute(f"INSERT INTO movies (title, year, actors) VALUES ('{movie.title}', '{movie.year}', '{flat_actors}')")
     db.commit()
     return {
         "message": f"Movie with id = {cursor.lastrowid} added successfully",
