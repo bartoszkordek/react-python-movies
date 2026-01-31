@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import Any
 import sqlite3
-
+import time
 
 class Movie(BaseModel):
     title: str
@@ -27,7 +27,7 @@ def get_movies():
     db = sqlite3.connect('movies.db')
     cursor = db.cursor()
     movies = cursor.execute('SELECT * FROM movies')
-
+    time.sleep(3) # mimic loading to trigger spinner in frontend
     output = []
     for movie in movies:
         movie = {'id': movie[0], 'title': movie[1], 'year': movie[2], 'actors': movie[3]}
