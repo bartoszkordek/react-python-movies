@@ -7,6 +7,7 @@ import ActorsList from "./ActorsList";
 
 function App() {
     const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [addingMovie, setAddingMovie] = useState(false);
     const [actors, setActors] = useState([]);
 
@@ -17,6 +18,7 @@ function App() {
                 setMovies(movies);
             }
          };
+
     const fetchActors = async () => {
             const response = await fetch(`/actors`);
             if (response.ok) {
@@ -24,9 +26,11 @@ function App() {
                 setActors(actors);
             }
          };
+
     useEffect(() => {
-        fetchMovies();
-        fetchActors();
+        setLoading(true);
+        Promise.all([fetchMovies(), fetchActors()])
+            .then(() => setLoading(false));
     }, []);
 
     async function handleAddMovie(movie) {
@@ -59,7 +63,12 @@ function App() {
     return (
         <div className="container">
              <h1>My favourite movies to watch</h1>
-            <div className="row">
+             {loading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', padding: '50px' }}>
+                    <div className="lds-ripple"><div></div><div></div></div>
+                </div>
+            ) : (
+             <div className="row">
                 <div className="column column-60">
                     {movies.length === 0
                         ? <p>No movies yet. Maybe add something?</p>
@@ -79,7 +88,7 @@ function App() {
                         />}
                 </div>
             </div>
-
+            )}
         </div>
     );
 }
