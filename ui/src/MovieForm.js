@@ -14,8 +14,15 @@ export default function MovieForm(props) {
             setYear(props.movie.year || '');
             setDirector(props.movie.director || '');
             setDescription(props.movie.description || '');
-            const movieActors = Array.isArray(props.movie.actors) ? props.movie.actors : [];
-            setActors(movieActors);
+            if (typeof props.movie.actors === 'string') {
+                const movieActors = props.movie.actors
+                    .split(',')
+                    .map(a => a.trim())
+                    .filter(a => a !== '');
+                setActors(movieActors);
+            } else {
+            setActors(Array.isArray(props.movie.actors) ? props.movie.actors : []);
+            }
         }
     }, [props.movie]);
 
@@ -61,14 +68,16 @@ export default function MovieForm(props) {
             <label>Description</label>
             <textarea value={description} onChange={(event) => setDescription(event.target.value)}/>
         </div>
-        <div>
-            <label>Actors</label>
-            <input type="text" value={actor} onChange={(event) => setActor(event.target.value)}/>
-            <button onClick={handleAddActor}>Add actor</button>
-            <ul>
-                {actors.map((actor, index) => <li key={index}>{actor}</li>)}
-            </ul>
-        </div>
+        {!props.movie && (
+            <div>
+                <label>Actors</label>
+                <input type="text" value={actor} onChange={(event) => setActor(event.target.value)}/>
+                <button onClick={handleAddActor}>Add actor</button>
+                <ul>
+                    {actors.map((actor, index) => <li key={index}>{actor}</li>)}
+                </ul>
+            </div>
+            )}
         <button type="button" onClick={handleSubmit}>{props.buttonLabel || 'Submit'}</button>
     </form>;
 }
