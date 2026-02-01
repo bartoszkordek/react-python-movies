@@ -42,7 +42,6 @@ function App() {
             headers: { 'Content-Type': 'application/json' }
           });
           if (response.ok) {
-              setMovies([...movies, movie]);
               setAddingMovie(false);
               fetchMovies();
               fetchActors();
