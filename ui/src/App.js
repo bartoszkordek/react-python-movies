@@ -7,8 +7,10 @@ import ActorsList from "./ActorsList";
 
 function App() {
     const [movies, setMovies] = useState([]);
+    const [movie, setMovie] = useState();
     const [loading, setLoading] = useState(true);
     const [addingMovie, setAddingMovie] = useState(false);
+    const [editingMovie, setEditingMovie] = useState(false);
     const [actors, setActors] = useState([]);
 
     const fetchMovies = async () => {
@@ -47,6 +49,26 @@ function App() {
           }
     }
 
+    function openEditMovieForm(selectedMovie) {
+        setMovie(selectedMovie);
+        setEditingMovie(true)
+        setAddingMovie(false);
+    }
+
+    async function handleEditMovie(movieDataFrom) {
+        const response = await fetch('/movies/' + movie.id, {
+            method: 'PUT',
+            body: JSON.stringify({ ...movieDataFrom, id: movie.id }),
+            headers: { 'Content-Type': 'application/json' }
+          });
+          if (response.ok) {
+              setEditingMovie(false);
+              setMovie(null);
+              fetchMovies();
+              fetchActors();
+          }
+    }
+
     async function handleDeleteMovie(movie) {
         const url = '/movies/' + movie.id
         const response = await fetch(url, {
@@ -73,11 +95,17 @@ function App() {
                     {movies.length === 0
                         ? <p>No movies yet. Maybe add something?</p>
                         : <MoviesList movies={movies}
+                                      onEditMovie={(m) => openEditMovieForm(m)}
                                       onDeleteMovie={handleDeleteMovie}
                         />}
+                    {editingMovie
+                        ? <MovieForm movie={movie}
+                                     onMovieSubmit={handleEditMovie}
+                                     label="Edit movie" buttonLabel="Edit a movie"
+                        /> : null}
                     {addingMovie
                         ? <MovieForm onMovieSubmit={handleAddMovie}
-                                     buttonLabel="Add a movie"
+                                     label="Add movie" buttonLabel="Add a movie"
                         />
                         : <button onClick={() => setAddingMovie(true)}>Add a movie</button>}
                 </div>
