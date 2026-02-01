@@ -61,11 +61,13 @@ def add_movie(movie: Movie):
 
 @app.put("/movies/{movie_id}")
 def update_movie(movie_id: int, params: dict[str, Any]):
+    actors = params.get('actors')
+    flat_actors = ", ".join(actors)
     db = sqlite3.connect('movies.db')
     cursor = db.cursor()
     cursor.execute(
         "UPDATE movies SET title = ?, year = ?, actors = ? WHERE id = ?",
-        (params['title'], params['year'], params['actors'], movie_id)
+        (params['title'], params['year'], flat_actors, movie_id)
     )
     db.commit()
     if cursor.rowcount == 0:
