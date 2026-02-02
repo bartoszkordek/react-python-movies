@@ -4,6 +4,7 @@ import "milligram";
 import MovieForm from "./MovieForm";
 import MoviesList from "./MoviesList";
 import ActorsList from "./ActorsList";
+import { ToastContainer, toast } from 'react-toastify';
 
 function App() {
     const [movies, setMovies] = useState([]);
@@ -18,16 +19,24 @@ function App() {
             if (response.ok) {
                 const movies = await response.json();
                 setMovies(movies);
-            }
-         };
+            } else {
+              const errorData = await response.json();
+              const errorMessage = errorData.detail || 'Something went wrong';
+              toast.error(errorMessage);
+           }
+    };
 
     const fetchActors = async () => {
             const response = await fetch(`/actors`);
             if (response.ok) {
                 const actors = await response.json();
                 setActors(actors);
-            }
-         };
+            } else {
+              const errorData = await response.json();
+              const errorMessage = errorData.detail || 'Something went wrong';
+              toast.error(errorMessage);
+           }
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -45,6 +54,10 @@ function App() {
               setAddingMovie(false);
               fetchMovies();
               fetchActors();
+          } else {
+              const errorData = await response.json();
+              const errorMessage = errorData.detail || 'Something went wrong';
+              toast.error(errorMessage);
           }
     }
 
@@ -65,6 +78,10 @@ function App() {
               setMovie(null);
               fetchMovies();
               fetchActors();
+          } else {
+              const errorData = await response.json();
+              const errorMessage = errorData.detail || 'Something went wrong';
+              toast.error(errorMessage);
           }
     }
 
@@ -84,6 +101,9 @@ function App() {
     return (
         <div className="container">
              <h1>My favourite movies to watch</h1>
+             <div>
+                <ToastContainer />
+              </div>
              {loading ? (
                 <div style={{ display: 'flex', justifyContent: 'center', padding: '50px' }}>
                     <div className="lds-ripple"><div></div><div></div></div>
