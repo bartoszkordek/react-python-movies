@@ -13,7 +13,7 @@ You can view the deployed project here: [react-python-movies-e5xl.onrender.com](
 ## ✨ Features
 
 ### Frontend
-*   **Movie Management:** Full capability to **add, edit (title, year, actors), and delete** movies.
+*   **Movie Management:** Full capability to **add, edit (title, year), and delete** movies.
 *   **Actor Management:** Functionality to add actors to movies and a dedicated view to display a unique, sorted list of all actors.
 *   **UI/UX Elements:** 
     *   **Loading Spinner:** A visual indicator (CSS ripple) that triggers while fetching data from the API.
